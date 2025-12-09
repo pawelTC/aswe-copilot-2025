@@ -3,57 +3,106 @@
 
 # Agentic Software Engineering with Copilot Workshop 2025
 
+
+<br/>
+
+
 ## Prerequisites
 
 - **GitHub account** and **GitHub Copilot** subscription
-- **VS Code** with GitHub Copilot extension
-- **Docker Desktop** or equivalent, for local Dev Container support
-    - Alternative: Use **GitHub Codespaces**
+- For local development:
+    - **VS Code** with GitHub Copilot extension
+    - **Docker Desktop** or equivalent, for local Dev Container support
+- Alternative: Use **GitHub Codespaces**
+
+<br/>
+
+## Getting Started / Preparations
+
+Follow the steps below to prepare your development environment for the exercises. Note that you have two options for launching the development environment: either **locally using Dev Containers and VS Code**, or using **GitHub Codespaces**.
+
+- _Benefit of local development with **Dev Container**_: Works offline (and not dependent on network conditions), more control over environment
+- _Benefit of **GitHub Codespaces**_: No local setup required (and quicker setup), works on any machine
+
+<br/>
+
+### **Step 1.** Fork the Repository
+To be able to push your own changes, you need to fork this repository to your own personal GitHub account. <br/>
+_**See also:**_ [Keeping your fork in sync](#keeping-your-fork-in-sync), in case the original repository is updated later.
+<br/><br/>
 
 
-## Getting Started
+Step 1: Click the "Fork" button at the top-right of this page<br/>
+<img src="assets/fork.png" height="30"/>
 
-### 1. Configure VS Code
+Step 2: Select your _**PERSONAL**_ GitHub account as the _**owner**_ of the fork<br/>
+<img src="assets/fork-step2.jpg" height="300"/><br/>
+_**NOTE**: Do NOT fork to an organization account, as this may cause issues with GitHub Copilot and GitHub Codespaces access._
+
+<br/>
+
+### **Step 2 - (OPTION 1)** - Launch the dev environment in local **Dev Container**
+Launch the development environment in a _Dev Container_ locally using _Docker Desktop_ (or similar) and _VS Code_.
+
+#### **2.1. Configure VS Code**
 <img src="https://code.visualstudio.com/assets/docs/copilot/setup/setup-copilot-sign-in.png" width="300" alt="GitHub Copilot sign in">
 
-- Ensure that you are logged in to your GitHub account in VS Code.
+##### **2.1.1. Install VS Code**
+Ensure you have the latest version of [VS Code](https://code.visualstudio.com/download) installed.
+
+##### **2.1.2. Login to GitHub and Set Up Copilot**
+Ensure that you are logged in to your GitHub account in VS Code.
     - Read more: [Sign in to GitHub in VS Code](https://code.visualstudio.com/docs/editor/github#_sign-in-to-github)
     - And even more: [Set up Copilot in VS Code](https://code.visualstudio.com/docs/copilot/setup#_set-up-copilot-in-vs-code)
+
+##### **2.1.3. Install Extensions**
 - Ensure that the [GitHub Copilot extension](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot) is installed and enabled in VS Code.
 - Install the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) in VS Code.
 
 
-### 2. Fork the Repository 
-<img src="assets/fork.png" height="30"/>
-
-### 3.1 Use Dev Container
-
-#### Clone Project in VS Code
+#### **2.2. Clone Project in VS Code**
 - Open VS Code
 - Open Command Palette (`Cmd+Shift+P` or `Ctrl+Shift+P`)
 - Type "Git: Clone" and select it<br/>
     <img src="assets/vscode-clone.png" height="300"/><br/>
 
-#### Open Project in Dev Container
+
+#### **2.3. Open Project in Dev Container**
+Launch the development environment in a Dev Container locally using Docker Desktop (or similar) and VS Code.
+
+##### **2.3.1. Ensure Docker is Running**
+Make sure Docker Desktop (or your preferred Docker environment) is installed and running on your machine.
+
+##### **2.3.2. Open Project in Dev Container**
 - When prompted by VS Code, click "Reopen in Container"<br/>
     <img src="assets/reopen-in-container.jpg" height="150"/><br/>
 - If not prompted, open the Command Palette (`Cmd+Shift+P` or `Ctrl+Shift+P`), type "Dev Containers: Reopen in Container", and select it.<br/>
 - Let VS Code build and start the Dev Container. _This may take several minutes on first run._
 
-### 3.2 - _Alternative_: Use GitHub Codespaces
+
+<br/>
+
+### **Step 2 - (OPTION 2)** - Launch the dev environment in **GitHub Codespaces**
 - Click "Code" and then "Create codespace on main" in the GitHub UI<br/>
     <img src="assets/code.png" height="30"/><br/>
     <img src="assets/codespacer.png" height="30"/>
     <br/>
 - Let GitHub set up the Codespace. _This may take several minutes on first run._
 
-### 4. Set Up Environment Variables
-After project has finished loading in Dev Container or Codespace:
-- Create a copy of the `.env.example` file and name it `.env`
-- Add the Gemini API key to the `.env` file: - **This key will be shared during the workshop** 
-    ```
-    GEMINI_API_KEY=your_gemini_api_key_here
-    ```
+<br/>
+
+### **Step 3.** Verify Setup
+Wait for the development environment to load completely. You should see the project files in the VS Code Explorer panel, and you should see the banner below indicating that the Dev Container has been setup successfully.
+
+<img src="assets/dev-container-done.png" height="150"/><br/>
+
+
+<br/>
+
+---
+
+<br/>
+
 
 
 ## Overview of Exercises
@@ -62,7 +111,7 @@ After project has finished loading in Dev Container or Codespace:
 |----------|-------|
 | [1. Copilot Fundamentals](docs/exercises/exercise-1-copilot-fundamentals.md) | Modes, commands, custom instructions, codebase exploration |
 | [2. Bug Hunt](docs/exercises/exercise-2-bug-hunt.md) | Fix 4 planted bugs with Agent Mode |
-| [3. Tool Building](docs/exercises/exercise-3-tool-building.md) | Build CLI tool, custom agents & commands |
+| [3. Tool Building](docs/exercises/exercise-3-tool-building.md) | Build CLI tool, setup custom agent & command for review |
 | [4a. Cloud Feature](docs/exercises/exercise-4a-cloud-feature.md) | Copilot coding agent via GitHub Issues |
 | [4b. Local Feature](docs/exercises/exercise-4b-local-feature.md) | Plan → Implement → Verify workflow |
 | [5. Spec-Driven Development](docs/exercises/exercise-5-spec-driven-development.md) | GitHub Spec Kit workflow |
@@ -147,3 +196,30 @@ https://docs.github.com/en/copilot/how-tos/configure-personal-settings/configure
 - [Simon Willison - The Lethal Trifecta](https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/)
 - [YouTube - The Message Every Engineer Needs to Hear](https://www.youtube.com/watch?v=XKCBcScElBg)
 - More comping soon...
+
+
+---
+
+## Keeping Your Fork in Sync
+
+If the original repository is updated after you fork, you can pull in those changes:
+
+```bash
+# Check if upstream remote exists
+git remote -v
+```
+
+If `upstream` is not listed, add it:
+```bash
+git remote add upstream https://github.com/computation-ninja/aswe-copilot-2025.git
+```
+
+Then fetch and merge:
+```bash
+git fetch upstream
+git checkout main
+git merge upstream/main
+
+# Optional: push to your fork's remote
+git push origin main
+```

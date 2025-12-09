@@ -2,7 +2,14 @@
 
 **Goal:** Build tools that extend Copilot's capabilities
 
-**Prerequisites:** Exercise 1 completed, GEMINI_API_KEY configured (see README)
+**Prerequisites:** Exercise 1 completed
+
+### API Key Setup
+Create a `.env` file in the project root (copy from `.env.example`) and add your OpenAI API key:
+```
+OPENAI_API_KEY=your_openai_api_key_here
+```
+Get a key at: https://platform.openai.com/api-keys or use an existing one provided to you.
 
 ---
 
@@ -24,23 +31,21 @@ The key insight: **Copilot can run your tools and use your custom commands.** Bu
 **Recommended: Python** — simplest setup, best SDK support, matches the todo-app stack.
 
 > ```md
-> #file:docs/exercises/gen-image-cli-prompt.md
+> #file:docs/exercises/gen-image-cli-prompt-openai.md
 >
-> Use Python. Create the CLI in gen-image/.
+> Use Python and Astral uv (make the script standalone and runnable with uv run). 
+> Create the CLI in gen-image/.
 > Include --help, input validation, and clear error messages.
 > ```
 
 <details>
 <summary>Want to use a different language?</summary>
 
-The dev container supports:
+The dev container also supports:
 
-| Language | SDK |
-|----------|-----|
-| Python | `google-genai` |
-| Node.js | `@google/genai` |
-| Deno | `@google/genai` |
-| Java | Google AI SDK |
+- Java
+- Node.js
+- Deno
 
 Replace "Python" in the prompt with your preferred language.
 
@@ -54,8 +59,8 @@ gen-image --prompt "A cute robot" [options]
 
 Options:
   --prompt        Image description (required)
-  --aspect-ratio  1:1, 2:3, 3:2, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9 (default), 21:9
-  --size          1K, 2K (default), 4K
+  --aspect-ratio  square (1024x1024, default), portrait (1024x1792), landscape (1792x1024)
+  --quality       standard (default), hd
   --output        Output file path (default: output.png)
   --help          Show usage
 ```
@@ -76,7 +81,7 @@ Common issues and how to fix them:
 
 | Problem | Solution |
 |---------|----------|
-| `GEMINI_API_KEY not found` | Check `.env` file exists in `gen-image/` with valid key |
+| `OPENAI_API_KEY not found` | Check `.env` file exists in project root with valid key |
 | `ModuleNotFoundError` | Ask Copilot to install dependencies: "Install the required packages for gen-image" |
 | Permission denied | Make script executable: `chmod +x gen-image/gen-image.py` |
 | API error / rate limit | Wait a moment and retry, or check API key validity |
@@ -225,7 +230,7 @@ Now have Copilot use the CLI tool to add a feature.
 > ```md
 > Use the gen-image CLI to generate a logo for the todo app:
 > - Prompt: "Minimal todo list app logo, checkmark icon, modern flat design, blue and white"
-> - Square aspect ratio, 1K size
+> - Square aspect ratio
 > - Save to todo-app/src/app/static/images/logo.png
 >
 > Then add the logo to the login page, centered above the form, max width 120px.
@@ -249,7 +254,7 @@ Add a welcome image to the main app.
 > ```md
 > Use the gen-image CLI to create a welcome banner:
 > - Prompt: "Productivity illustration, person completing tasks, minimal style, soft colors"
-> - 16:9 aspect ratio, 2K size
+> - Landscape aspect ratio
 > - Save to todo-app/src/app/static/images/welcome-banner.png
 >
 > Add it to the empty state when a list has no todos.
@@ -294,22 +299,22 @@ Add a welcome image to the main app.
 
 ## API Reference
 
-**Model:** `gemini-2.5-flash-image`
+**Model:** `dall-e-3`
 
 **Parameters:**
 - `prompt` — text description
-- `aspectRatio` — 1:1, 2:3, 3:2, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9
-- `outputOptions.mimeType` — image/png or image/jpeg
+- `size` — 1024x1024 (square), 1024x1792 (portrait), 1792x1024 (landscape)
+- `quality` — standard, hd
 
-**Docs:** [Gemini Image Generation](https://ai.google.dev/gemini-api/docs/image-generation)
+**Docs:** [OpenAI Image Generation](https://platform.openai.com/docs/guides/image-generation)
 
 ---
 
 ## Resources
 
-- [Gemini API Docs](https://ai.google.dev/gemini-api/docs)
-- [Google AI Python SDK](https://github.com/google/generative-ai-python)
-- [Google AI Node SDK](https://github.com/google/generative-ai-js)
+- [OpenAI API Docs](https://platform.openai.com/docs)
+- [OpenAI Python SDK](https://github.com/openai/openai-python)
+- [OpenAI Node SDK](https://github.com/openai/openai-node)
 - [VS Code Custom Agents](https://code.visualstudio.com/docs/copilot/customization/custom-agents)
 - [VS Code Prompt Files](https://code.visualstudio.com/docs/copilot/customization/prompt-files)
 - [GitHub Custom Agents Configuration](https://docs.github.com/en/copilot/reference/custom-agents-configuration)

@@ -125,31 +125,39 @@ Expected answer: FastAPI, SQLAlchemy, HTMX, Shoelace, Jinja2 templates.
 Custom instructions tell Copilot how to behave in your project.
 (Read more _**[here](https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot)**_)
 
-### Generate Repository Instructions Using Copilot
+### Generate default Repository Instructions Using Copilot
+The quickest way to get started is to have Copilot generate a base set of instructions for you. Simply press the button/link "**Generate Agent Instructions**" in the chat UI (see bewlow).
 
-This project already has coding guidelines and rules documented. Let Copilot analyze them and generate suitable custom instructions.
+<img src="../../assets/copilot-chat.jpg" height="300"/><br/>
+
+### Update instructions with mode specific rules
+
+This project already has some sample coding guidelines and rules documented. Make Copilot add suitable references to the in the custom instructions file.
 
 **Reference files under `docs/rules/`:**
 - [CRITICAL-RULES-AND-GUARDRAILS.md](../rules/CRITICAL-RULES-AND-GUARDRAILS.md)
 - [DEVELOPMENT-ARCHITECTURE-GUIDELINES.md](../rules/DEVELOPMENT-ARCHITECTURE-GUIDELINES.md)
 - [UX-UI-GUIDELINES.md](../rules/UX-UI-GUIDELINES.md)
 - [WEB-DEV-GUIDELINES.md](../rules/WEB-DEV-GUIDELINES.md)
+- [PYTHON-DEVELOPMENT-GUIDELINES.md](../rules/PYTHON-DEVELOPMENT-GUIDELINES.md)
 
 **Task:** Ask Copilot to generate custom instructions based on these existing rules:
 
 > ```md
-> @workspace Analyse the project and create suitable custom instructions (file:#.github/copilot-instructions.md) file. 
-> Update the file if it exists, otherwise create it.
-> Make sure to include links to vital rules documents under #file:docs/rules/.
-> Keep the instructions concise and actionable for Copilot.
+> Update the custom instructions (file:#.github/copilot-instructions.md) file with links to vital guidelines and rules 
+> documents under the #file:docs/rules/ folder. Only link and reference the files, do NOT duplicate content.
+> Keep the instructions concise and actionable.
 > ```
 
-**Review the output:** Ensure the generated instructions:
+
+### Review Generated Instructions
+
+**Review:** Ensure the generated instructions:
 - Reflect the actual tech stack (FastAPI, SQLAlchemy, HTMX, Shoelace)
 - Include key rules from the guidelines (using primarily links to files, not duplicating content)
 - Are appropriate for Copilot (not too long, actionable)
+- Do **NOT** contain links to documents that shoundn't be _**eagerly**_ referenced and loaded (e.g., "CRITICAL-RULES-AND-GUARDRAILS.md" should be referenced, but not "PERSONAL-NOTE.md")
 
-**NOTE:** You can also press the **"Generate Agent Instructions"** button in the chat UI to have Copilot create the file for you.
 
 ### Verify Instructions Apply
 
@@ -161,7 +169,12 @@ After creating the file, type this in a new chat window/conversation:
 
 Copilot should reference your custom instructions.
 
-### Path-Specific Instructions (Optional)
+You can verify that the correct instructions, guidelines and rules file are being applied by checking the message at the top of the chat window:
+<img src="../../assets/referenced-docs.jpg" height="140"/><br/>
+
+
+
+### Path-Specific Instructions (_**Optional**_)
 
 Create `.github/instructions/tests.instructions.md`:
 
@@ -204,23 +217,7 @@ Describe the requirement clearly. Copilot will analyze the codebase and find the
 - _Ask Copilot_ to **run the todo app for you**
 - Test manually with `curl http://localhost:8000/health`
 
-### Task 2: Add a Test
-
-**Goal:** Add a test case for your new health check endpoint.
-
-**Your task:** Ask Copilot to create a test. Think about what makes a good test request.
-
-<details>
-<summary>Stuck? Consider these questions</summary>
-
-- Where do existing tests live?
-- What should the test verify?
-- Use `/tests` slash command or describe what you need?
-</details>
-
-**Verify:** Run `uv run pytest tests/ -v` — your new test should pass.
-
-### Task 3: Try Checkpoints
+### Task 2: Try Checkpoints
 
 Checkpoints are automatic snapshots during Agent Mode. They let you restore to any previous state.
 
@@ -285,7 +282,10 @@ Navigate to this project folder and start Copilot CLI:
 copilot
 ```
 
-Then try: `What is the tech stack of this project?`
+Then try this prompt: 
+> ```md
+> What is the tech stack of this project?
+> ```
 
 ---
 
@@ -298,7 +298,7 @@ Then try: `What is the tech stack of this project?`
 - [ ] Know slash commands (`/explain`, `/fix`, `/tests`)
 - [ ] Created custom instructions file
 - [ ] Completed health check endpoint
-- [ ] Used checkpoints to restore and redo
+- [ ] Understand checkpoints (restore and redo)
 
 ---
 

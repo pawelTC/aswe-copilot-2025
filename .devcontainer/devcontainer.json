@@ -95,7 +95,13 @@
         "ms-python.vscode-pylance",
         "ms-python.debugpy",
         "denoland.vscode-deno"
-      ]
+      ],
+      "settings": {
+        "workbench.startupEditor": "readme",
+        "workbench.editorAssociations": {
+          "README.md": "vscode.markdown.preview.editor"
+        }
+      }
     }
   },
 

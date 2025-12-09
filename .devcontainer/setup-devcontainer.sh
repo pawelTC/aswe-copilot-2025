@@ -66,6 +66,21 @@ fi
 if ! grep -q "alias specify=" /home/vscode/.zshrc 2>/dev/null; then
     echo "" >> /home/vscode/.zshrc
     echo "# Specify alias" >> /home/vscode/.zshrc
-    echo 'alias specify="uvx --from git+https://github.com/github/spec-kit.git specify"' >> /home/vscode/.zshrc    
+    echo 'alias specify="uvx --from git+https://github.com/github/spec-kit.git specify"' >> /home/vscode/.zshrc
     echo "Added specify alias to .zshrc"
 fi
+
+# Install todo-app dependencies
+cd todo-app && uv sync && cd ..
+echo "Installed todo-app dependencies"
+
+# Display completion banner
+echo ""
+echo -e "\033[1;42;97m                                                                \033[0m"
+echo -e "\033[1;42;97m   ✅  DEV CONTAINER READY!                                     \033[0m"
+echo -e "\033[1;42;97m                                                                \033[0m"
+echo -e "\033[1;32m╔════════════════════════════════════════════════════════════╗\033[0m"
+echo -e "\033[1;32m║  Available: python, node, deno, java, copilot, claude, gh  ║\033[0m"
+echo -e "\033[1;32m║  Run 'copilot' to start GitHub Copilot CLI                 ║\033[0m"
+echo -e "\033[1;32m╚════════════════════════════════════════════════════════════╝\033[0m"
+echo ""

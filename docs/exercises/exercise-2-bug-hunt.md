@@ -17,7 +17,7 @@ uv run uvicorn app.main:app --reload
 >
 > **The challenge:** Describe the *symptom* to Copilot, not the solution. Let AI do the detective work.
 >
-> Solutions available in `docs/solutions/` if you get stuck.
+> Solutions available in [`docs/solutions/`](../solutions/) if you get stuck.
 
 ---
 
@@ -36,7 +36,12 @@ uv run uvicorn app.main:app --reload
 
 > ```md
 > @workspace Quick-add todos don't have a default priority.
-> Find where todos are created and ensure they get a default priority.
+> Find where todos are created and ensure they get a default priority, then implement the fix.
+> ```
+
+You may find that you need to ask Copilot again to actually implement the fix after it identifies the problem: 
+> ```md
+> Please implement the suggested fix.
 > ```
 </details>
 
@@ -68,6 +73,8 @@ Add `priority="low"` when creating the Todo object.
 > @workspace Due dates aren't saving when I edit todos.
 > The date disappears after saving. Find and fix the issue.
 > ```
+
+Again, you may need to ask Copilot to implement the fix after it identifies the problem.
 </details>
 
 <details>
@@ -99,13 +106,16 @@ Change `"%Y-%m-%dT%H:%M"` to `"%Y-%m-%d"`.
 > @workspace When I delete a todo, the sidebar count doesn't update.
 > The count only updates after a page refresh. Fix it.
 > ```
+
+Again, you may need to ask Copilot to implement the fix after it identifies the problem.
 </details>
 
 <details>
 <summary>Hint (if Copilot can't find it)</summary>
 
 File: `todo-app/src/app/routes/todos.py` — `delete_todo` function.
-Add `response_class=HTMLResponse` to the `@router.delete` decorator.
+The function just returns `Response(status_code=200)` without updating the sidebar.
+Fix: Return an HTML response with an OOB swap to update the count, similar to how `toggle_todo` does it.
 </details>
 
 **Verify:** Sidebar count updates immediately after deletion.
@@ -118,26 +128,31 @@ Add `response_class=HTMLResponse` to the `@router.delete` decorator.
 
 **Reproduce:**
 1. Create todos with yesterday, today, and tomorrow due dates
-2. Check styling — it's inconsistent or completely wrong
+2. Check styling — today's todo shows as overdue, "due today" styling never appears
 
-**Your task:** This is a type comparison bug. Describe what you observe.
+**Your task:** This is a datetime comparison bug. Describe what you observe.
 
 <details>
 <summary>Stuck? Try this prompt</summary>
 
 > ```md
-> @workspace The overdue styling is wrong. Todos that aren't overdue
-> are showing as overdue, and vice versa. Check the date comparison logic.
+> @workspace The overdue styling is wrong. Todos due today are showing
+> as overdue, and the "due today" styling never appears. Check the date comparison logic.
 > ```
+
+Again, you may need to ask Copilot to implement the fix after it identifies the problem.
 </details>
 
 <details>
 <summary>Hint (if Copilot can't find it)</summary>
 
 File: `todo-app/src/app/utils.py` — `is_overdue` and `is_due_today` functions.
-Add `.date()` conversion:
+The bug: comparing full datetime (with time) instead of just dates.
+Fix: compare `.date()` parts only:
 ```python
-due = todo.due_date.date() if isinstance(todo.due_date, datetime) else todo.due_date
+today = date.today()
+return todo.due_date.date() < today  # for is_overdue
+return todo.due_date.date() == today  # for is_due_today
 ```
 </details>
 
@@ -147,11 +162,45 @@ due = todo.due_date.date() if isinstance(todo.due_date, datetime) else todo.due_
 
 ## Final Check
 
+Open a new terminal and run all tests:
 ```bash
+cd todo-app
 uv run pytest tests/ -v
 ```
 
-All tests should pass.
+All tests _but one_ should pass, i.e. you should get a test failure like this:
+```bash
+tests/test_todos.py:29: AssertionError
+=============== short test summary info ================
+FAILED tests/test_todos.py::TestTodos::test_create_todo - AssertionError: assert None == 'low'
+```
+
+---
+
+## Part B: Write a Test (Optional)
+
+Now that all bugs are fixed, practice writing tests with Copilot.
+
+### Task: Add a Test for Default Priority
+
+**Goal:** Write a test that verifies new todos get `priority="low"` by default, and fix any existing tests that fail because of this new behavior.
+
+**Your task:** Ask Copilot to create a new test and fix existing tests. Consider:
+- Where do existing tests live? (`todo-app/tests/`)
+- What pattern do existing tests follow?
+- Use `/tests` slash command or describe what you need?
+
+<details>
+<summary>Stuck? Try this prompt</summary>
+
+> ```md
+> @workspace Add a test that verifies new todos created without explicit priority get "low" as the default. 
+> Also fix any existing tests that fail because of this new behavior.
+> Follow the existing test patterns in tests/test_todos.py.
+> ```
+</details>
+
+**Verify:** Run `uv run pytest tests/test_todos.py -v` — your new test should pass.
 
 ---
 
@@ -160,9 +209,10 @@ All tests should pass.
 | Concept | Remember |
 |---------|----------|
 | Context | Use `@workspace` + describe the symptom |
-| Silent failures | Watch for `pass` in except blocks |
-| Type mismatches | datetime vs date is common |
-| HTMX | Response types matter for swaps |
+| Silent failures | Watch for `except: pass` — errors vanish silently |
+| Date/time bugs | Compare `.date()` not full datetime with time |
+| HTMX OOB swaps | Need correct `response_class` for out-of-band updates |
+| Default values | Set defaults explicitly, don't assume DB defaults apply |
 
 ---
 

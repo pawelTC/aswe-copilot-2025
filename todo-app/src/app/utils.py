@@ -11,16 +11,16 @@ def is_overdue(todo: "Todo") -> bool:
     """Return True if due_date < today AND not completed."""
     if todo.is_completed or not todo.due_date:
         return False
-    today = date.today()
-    return todo.due_date < today
+    now = datetime.now()
+    return todo.due_date < now
 
 
 def is_due_today(todo: "Todo") -> bool:
     """Return True if due_date == today."""
     if not todo.due_date:
         return False
-    today = date.today()
-    return todo.due_date == today
+    now = datetime.now()
+    return todo.due_date == now
 
 
 def format_date(dt: datetime | date | None) -> str:

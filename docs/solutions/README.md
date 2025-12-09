@@ -40,15 +40,26 @@ todo.due_date = datetime.strptime(due_date, "%Y-%m-%d")
 ### Bug 3: Sidebar Count Not Updating
 **File:** `todos.py` - `delete_todo()` function (~line 286)
 
-**Problem:** The delete endpoint was missing `response_class=HTMLResponse`, causing HTMX OOB (Out-of-Band) swap to fail.
+**Problem:** The delete endpoint just returns `Response(status_code=200)` without sending an OOB update for the sidebar count.
 
-**Fix:** Add `response_class=HTMLResponse` to the decorator:
+**Fix:** Return an HTML template with OOB swap, similar to `toggle_todo`:
 ```python
 # Before (buggy):
-@router.delete("/{todo_id}")
+db.delete(todo)
+db.commit()
+return Response(status_code=200)
 
 # After (fixed):
-@router.delete("/{todo_id}", response_class=HTMLResponse)
+list_id = todo.list_id
+db.delete(todo)
+db.commit()
+
+count = _get_list_todo_count(db, list_id)
+return templates.TemplateResponse(
+    request=request,
+    name="partials/todo_deleted_oob.html",
+    context={"list_id": list_id, "count": count},
+)
 ```
 
 ---
@@ -56,16 +67,18 @@ todo.due_date = datetime.strptime(due_date, "%Y-%m-%d")
 ### Bug 4: Overdue Styling Wrong
 **File:** `utils.py` - `is_overdue()` and `is_due_today()` functions
 
-**Problem:** Comparing a `datetime` object directly to a `date` object gives incorrect results in Python.
+**Problem:** Comparing full `datetime` objects (with time component) instead of just dates. A todo due "today" stored as `2024-12-08 00:00:00` compared to `datetime.now()` = `2024-12-08 14:30:00` shows as overdue because `00:00:00 < 14:30:00`. Similarly, `is_due_today` uses `==` on full datetimes, which almost never matches.
 
-**Fix:** Convert datetime to date before comparison:
+**Fix:** Compare only the date parts:
 ```python
 # Before (buggy):
-return todo.due_date < today
+now = datetime.now()
+return todo.due_date < now  # Compares including time!
 
 # After (fixed):
+today = date.today()
 due = todo.due_date.date() if isinstance(todo.due_date, datetime) else todo.due_date
-return due < today
+return due < today  # Compares dates only
 ```
 
 ---

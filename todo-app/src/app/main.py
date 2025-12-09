@@ -146,13 +146,16 @@ async def db_exception_handler(request: Request, exc: SQLAlchemyError):
 @app.exception_handler(401)
 async def unauthorized_handler(request: Request, exc):
     """Handle unauthorized access."""
-    # Check if HTMX request
+    from fastapi.responses import RedirectResponse, Response
+
+    # Only use next= for page routes (not API endpoints, which use POST/PUT/DELETE)
+    next_url = request.url.path
+    if next_url.startswith("/api/"):
+        next_url = "/app"
+
     if request.headers.get("HX-Request") == "true":
-        from fastapi.responses import Response
         response = Response(status_code=401)
-        next_url = request.url.path
         response.headers["HX-Redirect"] = f"/login?next={next_url}"
         return response
 
-    from fastapi.responses import RedirectResponse
-    return RedirectResponse(url=f"/login?next={request.url.path}", status_code=302)
+    return RedirectResponse(url=f"/login?next={next_url}", status_code=302)
