@@ -202,8 +202,14 @@ https://docs.github.com/en/copilot/how-tos/configure-personal-settings/configure
 
 ## Keeping Your Fork in Sync
 
-If the original repository is updated after you fork, you can pull in those changes:
+If the original repository is updated after you fork, you can pull in those changes.
 
+**Option 1: Via GitHub UI** (easiest)<br/>
+On your fork's GitHub page, click **"Sync fork"** if your branch is behind:<br/>
+<img src="assets/sync-fork.jpg" height="140"/><br/>
+_(Then select "Update branch" if prompted.)_
+
+**Option 2: Via command line**
 ```bash
 # Check if upstream remote exists
 git remote -v
