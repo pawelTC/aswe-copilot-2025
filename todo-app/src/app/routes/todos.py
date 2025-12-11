@@ -43,6 +43,7 @@ async def search_todos(
     user_id: Annotated[str, Depends(get_current_user_id)],
     list_id: str,
     q: str = "",
+    priority: str = "all",
     db: Session = Depends(get_db),
 ):
     """Search todos by title in a specific list."""
@@ -56,17 +57,30 @@ async def search_todos(
             status_code=404,
         )
 
+    # Validate priority parameter
+    valid_priorities = ["all", "low", "medium", "high"]
+    if priority not in valid_priorities:
+        priority = "all"
+
     query = db.query(Todo).filter(Todo.list_id == list_id)
 
     if q.strip():
         query = query.filter(Todo.title.ilike(f"%{q.strip()}%"))
 
+    if priority != "all":
+        query = query.filter(Todo.priority == priority)
+
     todos = query.order_by(Todo.position).all()
 
     return templates.TemplateResponse(
         request=request,
-        name="partials/todos_list.html",
-        context={"todos": todos, "list": list_obj, "search_query": q},
+        name="partials/todos_with_filters.html",
+        context={
+            "todos": todos,
+            "list": list_obj,
+            "search_query": q,
+            "priority_filter": priority,
+        },
     )
 
 
